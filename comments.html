@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言讨论 | 我的个人主页</title>
+    <style>
+        /* 现代简约 CSS 样式 */
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --text: #333;
+            --light-text: #666;
+            --border: #e9ecef;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            text-decoration: none;
+            display: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        
+        /* 头部区域 (Hero Section) */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--white);
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 260px;
+            max-height: 260px;
+        }
+        
+        /* 个人信息区域 */
+        .hero .profile-header {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .hero .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--white);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin-right: 2rem;
+            flex-shrink: 0;
+        }
+        
+        .hero .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero .profile-name {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .hero .profile-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        .hero .hero-content {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+            max-width: 300px;
+        }
+        
+        .hero .hero-content h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .hero .hero-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        
+        /* 留言区域 */
+        .comments-section {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        /* 留言表单 */
+        .comment-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .submit-btn {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* 留言列表 */
+        .comment-list {
+            margin-top: 2rem;
+        }
+        
+        .comment-item {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .comment-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .comment-date {
+            font-size: 0.85rem;
+            color: var(--light-text);
+        }
+        
+        .comment-content {
+            color: var(--light-text);
+            line-height: 1.6;
+        }
+        
+        /* 无内容提示 */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--light-text);
+        }
+        
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .comments-section {
+                padding: 2rem;
+            }
+            
+            .comment-form {
+                padding: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">个人主页</a>
+        <div class="nav-links">
+            <a href="index.html">个人简介</a>
+            <a href="stories.html">成长故事</a>
+            <a href="studies.html">学习成果</a>
+            <a href="comments.html" class="active">留言讨论</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 头部区域 (Hero Section) -->
+<section class="hero" id="hero-section">
+    <div class="profile-header">
+        <img src="https://via.placeholder.com/120" alt="个人头像" class="profile-avatar" id="profile-avatar">
+        <div class="profile-info">
+            <h2 class="profile-name" id="profile-name">我的个人主页</h2>
+            <p class="profile-subtitle" id="profile-subtitle">不断学习，持续成长</p>
+        </div>
+        <div class="hero-content">
+            <h1>留言讨论</h1>
+            <p>分享您的想法，留下宝贵的建议</p>
+        </div>
+    </div>
+</section>
+
+<!-- 主内容区 -->
+<main class="main-content">
+    <section class="comments-section">
+        <h2 class="section-title">留言板</h2>
+        
+        <!-- 留言表单 -->
+        <div class="comment-form">
+            <h3>发表留言</h3>
+            <div class="form-group">
+                <label for="comment-author">您的昵称</label>
+                <input type="text" id="comment-author" placeholder="请输入您的昵称">
+            </div>
+            <div class="form-group">
+                <label for="comment-content">留言内容</label>
+                <textarea id="comment-content" placeholder="写下您的留言..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="submitComment()">发表留言</button>
+        </div>
+        
+        <!-- 留言列表 -->
+        <div class="comment-list" id="comment-list">
+            <!-- 动态生成 -->
+        </div>
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <h3>暂无留言</h3>
+            <p>快来发表第一条留言吧！</p>
+        </div>
+    </section>
+</main>
+
+<!-- 页脚 -->
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2026 个人主页. 设计与开发</p>
+    </div>
+</footer>
+
+<script src="js/db.js"></script>
+<script>
+    // 页面加载逻辑
+    window.addEventListener('DOMContentLoaded', async () => {
+        try {
+            console.log('Comments页面加载中...');
+            await initDB();
+            console.log('数据库初始化完成');
+            await loadProfileBackground();
+            await loadComments();
+            console.log('Comments页面加载完成');
+        } catch (error) {
+            console.error('Comments页面加载失败:', error);
+        }
+    });
+    
+    // 加载背景图片
+    async function loadProfileBackground() {
+        try {
+            const configs = await DB.getAll('config');
+            const profile = configs.find(c => c.key === 'profile');
+            if (profile && profile.background) {
+                const heroSection = document.getElementById('hero-section');
+                if (heroSection) {
+                    heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url('${profile.background}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+            } else {
+                // 只显示渐变效果，不显示默认背景图片
+                const heroSection = document.getElementById('hero-section');
+                if (heroSection) {
+                    heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%)`;
+                }
+            }
+            
+            // 加载个人信息到头部区域
+            if (profile) {
+                if (document.getElementById('profile-avatar')) {
+                    document.getElementById('profile-avatar').src = profile.avatar || 'https://via.placeholder.com/120';
+                }
+                if (document.getElementById('profile-name')) {
+                    document.getElementById('profile-name').textContent = profile.name || '我的个人主页';
+                }
+                if (document.getElementById('profile-subtitle')) {
+                    document.getElementById('profile-subtitle').textContent = profile.bio || '不断学习，持续成长';
+                }
+            }
+        } catch (error) {
+            console.error('加载背景图片失败:', error);
+        }
+    }
+
+    // 加载留言
+    async function loadComments() {
+        try {
+            const comments = await DB.getAll('comments') || [];
+            const sortedComments = comments.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const commentList = document.getElementById('comment-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (sortedComments.length > 0) {
+                commentList.innerHTML = sortedComments.map(comment => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author || '访客'}</span>
+                            <span class="comment-date">${new Date(comment.date).toLocaleString()}</span>
+                        </div>
+                        <div class="comment-content">${comment.content}</div>
+                    </div>
+                `).join('');
+                emptyState.style.display = 'none';
+            } else {
+                commentList.innerHTML = '';
+                emptyState.style.display = 'block';
+            }
+        } catch (error) {
+            console.log('加载留言失败:', error);
+            document.getElementById('empty-state').style.display = 'block';
+        }
+    }
+
+    // 提交留言
+    async function submitComment() {
+        const author = document.getElementById('comment-author').value.trim() || '访客';
+        const content = document.getElementById('comment-content').value.trim();
+        
+        if (!content) {
+            alert('请输入留言内容');
+            return;
+        }
+        
+        const comment = {
+            id: Date.now(),
+            content: content,
+            author: author,
+            date: new Date().toISOString()
+        };
+        
+        try {
+            // 尝试添加留言
+            await DB.add('comments', comment);
+            document.getElementById('comment-author').value = '';
+            document.getElementById('comment-content').value = '';
+            await loadComments();
+            alert('留言发表成功！');
+        } catch (error) {
+            // 如果comments存储不存在，创建它
+            console.log('创建comments存储...');
+            const request = indexedDB.open('MyPortfolioDB', 2);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('comments')) {
+                    db.createObjectStore('comments', { keyPath: 'id', autoIncrement: true });
+                }
+            };
+            request.onsuccess = async () => {
+                await DB.add('comments', comment);
+                document.getElementById('comment-author').value = '';
+                document.getElementById('comment-content').value = '';
+                await loadComments();
+                alert('留言发表成功！');
+            };
+        }
+    }
+</script>
+
+</body>
+</html>

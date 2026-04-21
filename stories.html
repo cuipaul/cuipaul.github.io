@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成长故事 | 我的个人主页</title>
+    <style>
+        /* 现代简约 CSS 样式 */
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --text: #333;
+            --light-text: #666;
+            --border: #e9ecef;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            text-decoration: none;
+            display: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        
+        /* 头部区域 (Hero Section) */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--white);
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 260px;
+            max-height: 260px;
+        }
+        
+        /* 个人信息区域 */
+        .hero .profile-header {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .hero .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--white);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin-right: 2rem;
+            flex-shrink: 0;
+        }
+        
+        .hero .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero .profile-name {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .hero .profile-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        .hero .hero-content {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+            max-width: 300px;
+        }
+        
+        .hero .hero-content h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .hero .hero-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        
+        /* 文章列表 */
+        .posts-section {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        /* 文章列表 */
+        .post-list {
+            margin-top: 2rem;
+        }
+        
+        .post-item {
+            display: flex;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .post-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .post-cover {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+            background: #e9ecef;
+        }
+        
+        .post-content {
+            flex: 1;
+            padding: 0;
+        }
+        
+        .post-date {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            line-height: 1.4;
+        }
+        
+        .post-excerpt {
+            color: var(--light-text);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .post-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .post-link:hover {
+            color: var(--primary);
+        }
+        
+        /* 无内容提示 */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--light-text);
+        }
+        
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .posts-section {
+                padding: 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">个人主页</a>
+        <div class="nav-links">
+            <a href="index.html">个人简介</a>
+            <a href="stories.html" class="active">成长故事</a>
+            <a href="studies.html">学习成果</a>
+            <a href="comments.html">留言讨论</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 头部区域 (Hero Section) -->
+<section class="hero" id="hero-section">
+    <div class="profile-header">
+        <img src="https://via.placeholder.com/120" alt="个人头像" class="profile-avatar" id="profile-avatar">
+        <div class="profile-info">
+            <h2 class="profile-name" id="profile-name">我的个人主页</h2>
+            <p class="profile-subtitle" id="profile-subtitle">不断学习，持续成长</p>
+        </div>
+        <div class="hero-content">
+            <h1>成长故事</h1>
+            <p>记录个人成长的点滴</p>
+        </div>
+    </div>
+</section>
+
+<!-- 主内容区 -->
+<main class="main-content">
+    <section class="posts-section">
+        <h2 class="section-title">我的成长故事</h2>
+        <div class="post-list" id="posts-grid">
+            <!-- 动态生成 -->
+        </div>
+        <div class="empty-state" id="empty-state">
+            <h3>暂无成长故事</h3>
+            <p>快来添加您的第一个成长故事吧！</p>
+        </div>
+    </section>
+</main>
+
+<!-- 页脚 -->
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2026 个人主页. 设计与开发</p>
+    </div>
+</footer>
+
+<script src="js/db.js"></script>
+<script>
+    // 页面加载逻辑
+    window.addEventListener('DOMContentLoaded', async () => {
+        try {
+            console.log('Stories页面加载中...');
+            await initDB();
+            console.log('数据库初始化完成');
+            await loadProfileBackground();
+            await loadStories();
+            console.log('Stories页面加载完成');
+        } catch (error) {
+            console.error('Stories页面加载失败:', error);
+        }
+    });
+    
+    // 加载背景图片
+    async function loadProfileBackground() {
+        try {
+            const configs = await DB.getAll('config');
+            const profile = configs.find(c => c.key === 'profile');
+            if (profile && profile.background) {
+                const heroSection = document.getElementById('hero-section');
+                if (heroSection) {
+                    heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url('${profile.background}')`;
+                    heroSection.style.backgroundSize = 'cover';
+                    heroSection.style.backgroundPosition = 'center';
+                }
+            } else {
+                // 只显示渐变效果，不显示默认背景图片
+                const heroSection = document.getElementById('hero-section');
+                if (heroSection) {
+                    heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%)`;
+                }
+            }
+            
+            // 加载个人信息到头部区域
+            if (profile) {
+                if (document.getElementById('profile-avatar')) {
+                    document.getElementById('profile-avatar').src = profile.avatar || 'https://via.placeholder.com/120';
+                }
+                if (document.getElementById('profile-name')) {
+                    document.getElementById('profile-name').textContent = profile.name || '我的个人主页';
+                }
+                if (document.getElementById('profile-subtitle')) {
+                    document.getElementById('profile-subtitle').textContent = profile.bio || '不断学习，持续成长';
+                }
+            }
+        } catch (error) {
+            console.error('加载背景图片失败:', error);
+        }
+    }
+
+    // 加载成长故事
+    async function loadStories() {
+        const posts = await DB.getAll('posts') || [];
+        const stories = posts.filter(p => p.type === 'story').sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        const postsGrid = document.getElementById('posts-grid');
+        const emptyState = document.getElementById('empty-state');
+        
+        if (stories.length > 0) {
+            postsGrid.innerHTML = stories.map(story => `
+                <div class="post-item" onclick="location.href='detail.html?id=${story.id}'">
+                    <img src="${story.cover || 'https://via.placeholder.com/120x80'}" class="post-cover">
+                    <div class="post-content">
+                        <span class="post-date">${new Date(story.date).toLocaleDateString()}</span>
+                        <h3 class="post-title">${story.title}</h3>
+                        <p class="post-excerpt">${story.excerpt || '点击阅读更多...'}</p>
+                        <a href="detail.html?id=${story.id}" class="post-link">阅读全文 →</a>
+                    </div>
+                </div>
+            `).join('');
+            emptyState.style.display = 'none';
+        } else {
+            postsGrid.innerHTML = '';
+            emptyState.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
